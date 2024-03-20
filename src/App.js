@@ -18,7 +18,16 @@ export class App {
       // それぞれのTodoItem要素をtodoListElement以下へ追加する
       const todoItems = this.#todoListModel.getTodoItems();
       todoItems.forEach((item) => {
-        const todoItemElement = element`<li><div class="list-row"><p class="todo-item">${item.title}</p><button>完了</button><button>削除</button></div></li>`;
+        const todoItemElement = element`<li><div class="list-row"><p class="todo-item">${item.title}</p><button>完了</button><button class="delete-button">削除</button></div></li>`;
+
+        // 削除ボタン(x)がクリックされたときにTodoListModelからアイテムを削除する
+        const deleteButtonElement =
+          todoItemElement.querySelector(".delete-button");
+        deleteButtonElement.addEventListener("click", () => {
+          this.#todoListModel.deleteTodo({
+            id: item.id,
+          });
+        });
 
         todoListElement.appendChild(todoItemElement);
       });
