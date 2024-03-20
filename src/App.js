@@ -18,7 +18,8 @@ export class App {
       // それぞれのTodoItem要素をtodoListElement以下へ追加する
       const todoItems = this.#todoListModel.getTodoItems();
       todoItems.forEach((item) => {
-        const todoItemElement = element`<li>${item.title}</li>`;
+        const todoItemElement = element`<li><div class="list-row"><p class="todo-item">${item.title}</p><button>完了</button><button>削除</button></div></li>`;
+
         todoListElement.appendChild(todoItemElement);
       });
       // コンテナ要素の中身をTodoリストをまとめるList要素で上書きする
