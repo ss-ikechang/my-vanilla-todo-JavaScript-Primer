@@ -1,23 +1,39 @@
+import { TodoListModel } from "./model/TodoListModel.js";
+import { TodoItemModel } from "./model/TodoItemModel.js";
 import { element, render } from "./view/html-util.js";
 
 export class App {
+  // 1. TodoListModelの初期化
+  #todoListModel = new TodoListModel();
+
   mount() {
     const formElement = document.getElementById("add-button");
     const inputElement = document.getElementById("add-text");
     const containerElement = document.getElementById("incomplete-list");
 
-    // TodoリストをまとめるList要素
-    const todoListElement = element`<ul></ul>`;
-    formElement.addEventListener("click", (event) => {
-      console.log(`入力欄の値: ${inputElement.value}`);
-
-      // 追加するTodoアイテムの要素(li要素)を作成する
-      const todoItemElement = element`<li>${inputElement.value}</li>`;
-      // TodoアイテムをtodoListElementに追加する
-      todoListElement.appendChild(todoItemElement);
+    // 2. TodoListModelの状態が更新されたら表示を更新する
+    this.#todoListModel.onChange(() => {
+      // TodoリストをまとめるList要素
+      const todoListElement = element`<ul></ul>`;
+      // それぞれのTodoItem要素をtodoListElement以下へ追加する
+      const todoItems = this.#todoListModel.getTodoItems();
+      todoItems.forEach((item) => {
+        const todoItemElement = element`<li>${item.title}</li>`;
+        todoListElement.appendChild(todoItemElement);
+      });
       // コンテナ要素の中身をTodoリストをまとめるList要素で上書きする
       render(todoListElement, containerElement);
+    });
 
+    formElement.addEventListener("click", (event) => {
+      console.log(`入力欄の値: ${inputElement.value}`);
+      // 新しいTodoItemをTodoListへ追加する
+      this.#todoListModel.addTodo(
+        new TodoItemModel({
+          title: inputElement.value,
+          completed: false,
+        })
+      );
       // 入力欄を空文字列にしてリセットする
       inputElement.value = "";
     });
