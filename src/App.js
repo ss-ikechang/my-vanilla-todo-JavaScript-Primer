@@ -62,8 +62,8 @@ export class App {
       const todoItems = this.#incompleteTodoListModel.getTodoItems();
       const incompleteTodoListView = new IncompleteTodoListView();
       const todoListElement = incompleteTodoListView.createElement(todoItems, {
-        onCompleteTodo,
-        onDeleteTodo,
+        onCompleteTodo: onCompleteTodo,
+        onDeleteTodo: onDeleteTodo,
       });
 
       // コンテナ要素の中身をTodoリストをまとめるList要素で上書きする
@@ -76,7 +76,7 @@ export class App {
       const todoItems = this.#completeTodoListModel.getTodoItems();
       const completeTodoListView = new CompleteTodoListView();
       const todoListElement = completeTodoListView.createElement(todoItems, {
-        onBackTodo,
+        onBackTodo: onBackTodo,
       });
 
       // コンテナ要素の中身をTodoリストをまとめるList要素で上書きする
