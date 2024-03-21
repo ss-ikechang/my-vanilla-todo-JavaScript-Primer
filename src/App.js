@@ -15,6 +15,44 @@ export class App {
     const comlpeteTodoContainerElement =
       document.getElementById("complete-list");
 
+    // 完了ボタンコールバック関数
+    const onCompleteTodo = (props) => {
+      const { id, title } = props;
+      // 指定したTodoアイテムを完了にする→incompleteTodoListModelから削除し、completeTodoListModelに追加
+      this.#incompleteTodoListModel.deleteTodo({
+        id: id,
+      });
+      this.#completeTodoListModel.addTodo(
+        new TodoItemModel({
+          title: title,
+          completed: true,
+        })
+      );
+    };
+
+    // 削除ボタンコールバック関数
+    const onDeleteTodo = (props) => {
+      const { id } = props;
+      this.#incompleteTodoListModel.deleteTodo({
+        id: id,
+      });
+    };
+
+    // 戻るボタンコールバック関数
+    const onBackTodo = (props) => {
+      const { id, title } = props;
+      // 指定したTodoアイテムを未完了にする→completeTodoListModelから削除し、incompleteTodoListModelに追加
+      this.#completeTodoListModel.deleteTodo({
+        id: id,
+      });
+      this.#incompleteTodoListModel.addTodo(
+        new TodoItemModel({
+          title: title,
+          completed: false,
+        })
+      );
+    };
+
     // 2-1. incompleteTodoListModelの状態が更新されたら表示を更新する
     this.#incompleteTodoListModel.onChange(() => {
       // TodoリストをまとめるList要素
@@ -30,25 +68,14 @@ export class App {
           const completeButtonElement =
             todoItemElement.querySelector(".complete-button");
           completeButtonElement.addEventListener("click", () => {
-            // 指定したTodoアイテムを完了にする→incompleteTodoListModelから削除し、completeTodoListModelに追加
-            this.#incompleteTodoListModel.deleteTodo({
-              id: item.id,
-            });
-            this.#completeTodoListModel.addTodo(
-              new TodoItemModel({
-                title: item.title,
-                completed: true,
-              })
-            );
+            onCompleteTodo({ id: item.id, title: item.title });
           });
 
           // 削除ボタンがクリックされたときにincompleteTodoListModelからアイテムを削除する
           const deleteButtonElement =
             todoItemElement.querySelector(".delete-button");
           deleteButtonElement.addEventListener("click", () => {
-            this.#incompleteTodoListModel.deleteTodo({
-              id: item.id,
-            });
+            onDeleteTodo({ id: item.id });
           });
 
           todoListElement.appendChild(todoItemElement);
@@ -73,17 +100,9 @@ export class App {
           const backButtonElement =
             todoItemElement.querySelector(".back-button");
           backButtonElement.addEventListener("click", () => {
-            // 指定したTodoアイテムを未完了にする→completeTodoListModelから削除し、incompleteTodoListModelに追加
-            this.#completeTodoListModel.deleteTodo({
-              id: item.id,
-            });
-            this.#incompleteTodoListModel.addTodo(
-              new TodoItemModel({
-                title: item.title,
-                completed: false,
-              })
-            );
+            onBackTodo({ id: item.id, title: item.title });
           });
+
           todoListElement.appendChild(todoItemElement);
         }
       });
