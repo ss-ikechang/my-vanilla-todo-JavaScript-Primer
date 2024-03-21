@@ -1,6 +1,7 @@
 import { TodoListModel } from "./model/TodoListModel.js";
 import { TodoItemModel } from "./model/TodoItemModel.js";
 import { element, render } from "./view/html-util.js";
+import { IncompleteTodoItemView } from "./view/IncompleteTodoItemView.js";
 
 export class App {
   // 1. TodoListModelの初期化
@@ -62,20 +63,10 @@ export class App {
       todoItems.forEach((item) => {
         // 未完了だけ表示する
         if (item.completed === false) {
-          const todoItemElement = element`<li><div class="list-row"><p class="todo-item">${item.title}</p><button class="complete-button">完了</button><button class="delete-button">削除</button></div></li>`;
-
-          // 完了ボタンがクリックされたときのイベントにリスナー関数を登録
-          const completeButtonElement =
-            todoItemElement.querySelector(".complete-button");
-          completeButtonElement.addEventListener("click", () => {
-            onCompleteTodo({ id: item.id, title: item.title });
-          });
-
-          // 削除ボタンがクリックされたときにincompleteTodoListModelからアイテムを削除する
-          const deleteButtonElement =
-            todoItemElement.querySelector(".delete-button");
-          deleteButtonElement.addEventListener("click", () => {
-            onDeleteTodo({ id: item.id });
+          const incompleteTodoItemView = new IncompleteTodoItemView();
+          const todoItemElement = incompleteTodoItemView.createElement(item, {
+            onCompleteTodo,
+            onDeleteTodo,
           });
 
           todoListElement.appendChild(todoItemElement);
