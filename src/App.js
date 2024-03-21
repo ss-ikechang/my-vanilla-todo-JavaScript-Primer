@@ -3,6 +3,7 @@ import { TodoItemModel } from "./model/TodoItemModel.js";
 import { element, render } from "./view/html-util.js";
 import { IncompleteTodoItemView } from "./view/IncompleteTodoItemView.js";
 import { IncompleteTodoListView } from "./view/IncompleteTodoListView.js";
+import { CompleteTodoListView } from "./view/CompleteTodoListView.js";
 
 export class App {
   // 1. TodoListModelの初期化
@@ -71,25 +72,13 @@ export class App {
 
     // 2-2. completeTodoListModelの状態が更新されたら表示を更新する
     this.#completeTodoListModel.onChange(() => {
-      // TodoリストをまとめるList要素
-      const todoListElement = element`<ul></ul>`;
       // それぞれのTodoItem要素をtodoListElement以下へ追加する
       const todoItems = this.#completeTodoListModel.getTodoItems();
-      todoItems.forEach((item) => {
-        // 完了だけ表示する
-        if (item.completed === true) {
-          const todoItemElement = element`<li><div class="list-row"><p class="todo-item">${item.title}</p><button class="back-button">戻る</button></div></li>`;
-
-          // 戻るボタンがクリックされたときのイベントにリスナー関数を登録
-          const backButtonElement =
-            todoItemElement.querySelector(".back-button");
-          backButtonElement.addEventListener("click", () => {
-            onBackTodo({ id: item.id, title: item.title });
-          });
-
-          todoListElement.appendChild(todoItemElement);
-        }
+      const completeTodoListView = new CompleteTodoListView();
+      const todoListElement = completeTodoListView.createElement(todoItems, {
+        onBackTodo,
       });
+
       // コンテナ要素の中身をTodoリストをまとめるList要素で上書きする
       render(todoListElement, comlpeteTodoContainerElement);
     });
