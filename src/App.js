@@ -2,6 +2,7 @@ import { TodoListModel } from "./model/TodoListModel.js";
 import { TodoItemModel } from "./model/TodoItemModel.js";
 import { element, render } from "./view/html-util.js";
 import { IncompleteTodoItemView } from "./view/IncompleteTodoItemView.js";
+import { IncompleteTodoListView } from "./view/IncompleteTodoListView.js";
 
 export class App {
   // 1. TodoListModelの初期化
@@ -56,22 +57,14 @@ export class App {
 
     // 2-1. incompleteTodoListModelの状態が更新されたら表示を更新する
     this.#incompleteTodoListModel.onChange(() => {
-      // TodoリストをまとめるList要素
-      const todoListElement = element`<ul></ul>`;
       // それぞれのTodoItem要素をtodoListElement以下へ追加する
       const todoItems = this.#incompleteTodoListModel.getTodoItems();
-      todoItems.forEach((item) => {
-        // 未完了だけ表示する
-        if (item.completed === false) {
-          const incompleteTodoItemView = new IncompleteTodoItemView();
-          const todoItemElement = incompleteTodoItemView.createElement(item, {
-            onCompleteTodo,
-            onDeleteTodo,
-          });
-
-          todoListElement.appendChild(todoItemElement);
-        }
+      const incompleteTodoListView = new IncompleteTodoListView();
+      const todoListElement = incompleteTodoListView.createElement(todoItems, {
+        onCompleteTodo,
+        onDeleteTodo,
       });
+
       // コンテナ要素の中身をTodoリストをまとめるList要素で上書きする
       render(todoListElement, incomlpeteTodoContainerElement);
     });
