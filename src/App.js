@@ -31,11 +31,19 @@ export class App {
     };
 
     // 削除ボタンコールバック関数
+    // const onDeleteTodo = (props) => {
+    //   const { id } = props;
+    //   this.#incompleteTodoListModel.deleteTodo({
+    //     id: id,
+    //   });
+    // };
     const onDeleteTodo = (props) => {
-      const { id } = props;
-      this.#incompleteTodoListModel.deleteTodo({
-        id: id,
-      });
+      return (event) => {
+        const { id } = props;
+        this.#incompleteTodoListModel.deleteTodo({
+          id: id,
+        });
+      };
     };
 
     // 戻るボタンコールバック関数
@@ -74,9 +82,10 @@ export class App {
           // 削除ボタンがクリックされたときにincompleteTodoListModelからアイテムを削除する
           const deleteButtonElement =
             todoItemElement.querySelector(".delete-button");
-          deleteButtonElement.addEventListener("click", () => {
-            onDeleteTodo({ id: item.id });
-          });
+          deleteButtonElement.addEventListener(
+            "click",
+            onDeleteTodo({ id: item.id })
+          );
 
           todoListElement.appendChild(todoItemElement);
         }
