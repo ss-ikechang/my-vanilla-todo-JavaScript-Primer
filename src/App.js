@@ -12,6 +12,21 @@ export class App {
   #incompleteTodoListView = new IncompleteTodoListView();
   #completeTodoListView = new CompleteTodoListView();
 
+  // 完了ボタンコールバック関数
+  #onCompleteTodo = (props) => {
+    const { id, title } = props;
+    // 指定したTodoアイテムを完了にする→incompleteTodoListModelから削除し、completeTodoListModelに追加
+    this.#incompleteTodoListModel.deleteTodo({
+      id: id,
+    });
+    this.#completeTodoListModel.addTodo(
+      new TodoItemModel({
+        title: title,
+        completed: true,
+      })
+    );
+  };
+
   // 削除ボタンコールバック関数
   // onDeleteTodo(props) {
   //   const { id } = props;
@@ -19,11 +34,26 @@ export class App {
   //     id: id,
   //   });
   // }
-  onDeleteTodo = (props) => {
+  #onDeleteTodo = (props) => {
     const { id } = props;
     this.#incompleteTodoListModel.deleteTodo({
       id: id,
     });
+  };
+
+  // 戻るボタンコールバック関数
+  #onBackTodo = (props) => {
+    const { id, title } = props;
+    // 指定したTodoアイテムを未完了にする→completeTodoListModelから削除し、incompleteTodoListModelに追加
+    this.#completeTodoListModel.deleteTodo({
+      id: id,
+    });
+    this.#incompleteTodoListModel.addTodo(
+      new TodoItemModel({
+        title: title,
+        completed: false,
+      })
+    );
   };
 
   mount() {
@@ -33,36 +63,6 @@ export class App {
       document.getElementById("incomplete-list");
     const comlpeteTodoContainerElement =
       document.getElementById("complete-list");
-
-    // 完了ボタンコールバック関数
-    const onCompleteTodo = (props) => {
-      const { id, title } = props;
-      // 指定したTodoアイテムを完了にする→incompleteTodoListModelから削除し、completeTodoListModelに追加
-      this.#incompleteTodoListModel.deleteTodo({
-        id: id,
-      });
-      this.#completeTodoListModel.addTodo(
-        new TodoItemModel({
-          title: title,
-          completed: true,
-        })
-      );
-    };
-
-    // 戻るボタンコールバック関数
-    const onBackTodo = (props) => {
-      const { id, title } = props;
-      // 指定したTodoアイテムを未完了にする→completeTodoListModelから削除し、incompleteTodoListModelに追加
-      this.#completeTodoListModel.deleteTodo({
-        id: id,
-      });
-      this.#incompleteTodoListModel.addTodo(
-        new TodoItemModel({
-          title: title,
-          completed: false,
-        })
-      );
-    };
 
     // const handleComplete = (props) => {
     //   this.onDeleteTodo(props);
@@ -78,8 +78,8 @@ export class App {
       const todoListElement = this.#incompleteTodoListView.createElement(
         todoItems,
         {
-          onCompleteTodo: onCompleteTodo,
-          onDeleteTodo: this.onDeleteTodo,
+          onCompleteTodo: this.#onCompleteTodo,
+          onDeleteTodo: this.#onDeleteTodo,
 
           // onDeleteTodo: (props) => {
           //   this.onDeleteTodo(props);
@@ -107,7 +107,7 @@ export class App {
       const todoListElement = this.#completeTodoListView.createElement(
         todoItems,
         {
-          onBackTodo: onBackTodo,
+          onBackTodo: this.#onBackTodo,
         }
       );
 
