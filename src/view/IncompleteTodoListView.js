@@ -5,7 +5,7 @@ export class IncompleteTodoListView {
   /**
    * `todoItems`に対応するTodoリストのHTML要素を作成して返す
    * @param {TodoItemModel[]} todoItems TodoItemModelの配列
-   * @param {function({id:number, completed: boolean})} onUpdateTodo チェックボックスの更新イベントリスナー
+   * @param {function({id:number, title: string})} onUpdateTodo チェックボックスの更新イベントリスナー
    * @param {function({id:number})} onDeleteTodo 削除ボタンのクリックイベントリスナー
    * @returns {Element} TodoItemModelの配列に対応したリストのHTML要素
    */

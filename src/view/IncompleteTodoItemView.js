@@ -4,7 +4,7 @@ export class IncompleteTodoItemView {
   /**
    * `todoItem`に対応するTodoアイテムのHTML要素を作成して返す
    * @param {TodoItemModel} todoItem
-   * @param {function({id:number, completed: boolean})} onCompleteTodo 完了ボタンのクリックイベントリスナー
+   * @param {function({id:number, title: string})} onCompleteTodo 完了ボタンのクリックイベントリスナー
    * @param {function({id:number})} onDeleteTodo 削除ボタンのクリックイベントリスナー
    * @returns {Element}
    */
