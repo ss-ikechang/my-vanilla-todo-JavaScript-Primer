@@ -12,6 +12,17 @@ export class App {
   #incompleteTodoListView = new IncompleteTodoListView();
   #completeTodoListView = new CompleteTodoListView();
 
+  // 追加ボタンコールバック関数
+  #onAddTodo = (props) => {
+    const { title } = props;
+    this.#incompleteTodoListModel.addTodo(
+      new TodoItemModel({
+        title: title,
+        completed: false,
+      })
+    );
+  };
+
   // 完了ボタンコールバック関数
   #onCompleteTodo = (props) => {
     const { id, title } = props;
@@ -118,12 +129,7 @@ export class App {
     formElement.addEventListener("click", (event) => {
       console.log(`入力欄の値: ${inputElement.value}`);
       // 新しいTodoItemをTodoListへ追加する
-      this.#incompleteTodoListModel.addTodo(
-        new TodoItemModel({
-          title: inputElement.value,
-          completed: false,
-        })
-      );
+      this.#onAddTodo({ title: inputElement.value });
       // 入力欄を空文字列にしてリセットする
       inputElement.value = "";
     });
